@@ -2,16 +2,28 @@ package com.firebasevapecounter
 
 import android.content.Intent
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
 import android.util.Log
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.firebasevapecounter.databinding.ActivityLoginBinding
 import com.firebasevapecounter.model.OrderHistory
 import com.firebasevapecounter.model.User
 import com.firebasevapecounter.service.NotificationsService
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import java.util.concurrent.TimeUnit
 
 class LoginActivity : BaseActivity() {
 
+    private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
+    private var storedVerificationId: String = ""
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,18 +31,27 @@ class LoginActivity : BaseActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.etOtp.isVisible = false
+        binding.etPhone.isEnabled = true
         binding.btnLogin.setOnClickListener {
-            if (binding.etEmail.text.isNullOrBlank() || binding.etPassword.text.isNullOrBlank()) return@setOnClickListener
+            if (binding.etPhone.text.isNullOrBlank()) return@setOnClickListener
 
             showProgressbar()
-            loginUser()
+            if (storedVerificationId.isNullOrBlank()) {
+                loginPhone()
+            } else {
+                val credential = PhoneAuthProvider.getCredential(
+                    storedVerificationId, binding.etOtp.text.toString()
+                )
+                signInWithPhoneAuthCredential(credential)
+            }
         }
 
     }
 
-    private fun loginUser() {
+    /*private fun loginUser() {
         auth.signInWithEmailAndPassword(
-            binding.etEmail.text.toString().trim(), binding.etPassword.text.toString()
+            binding.etPhone.text.toString().trim(), binding.etOtp.text.toString()
         ).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
@@ -47,64 +68,157 @@ class LoginActivity : BaseActivity() {
 
             }
         }
-    }
+    }*/
 
 
     private fun addToCount(user: FirebaseUser) {
         databaseRef.child("users").child(user.uid).get().addOnSuccessListener {
-            var model = it.getValue(User::class.java)
-            if (model?.admin == true) {
-                hideProgressbar()
-                val i = Intent(applicationContext, NotificationsService::class.java)
-                i.putExtra("data",model)
-                startService(i)
-                val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(intent)
-
-            } else {
-                var win = false
-                if (model != null) {
+            if (it.value != null) {
+                var model = it.getValue(User::class.java)
+                if (model?.admin == true) {
                     hideProgressbar()
-                    if (model.currentCount + 1 >= 10) {
-                        model.currentCount = 0
-                        win = true
-                    } else {
-                        model.currentCount += 1
-                    }
-                    model.totalCount += 1
-
-                    val orders = OrderHistory(
-                        System.currentTimeMillis(),
-                        model.name.toString(),
-                        user.uid,
-                        model.currentCount
-                    )
-                    val map = HashMap<String, Any>()
-                    map["/users/${user.uid}"] = model
-                    map["/orders/${System.currentTimeMillis()}"] = orders
-
-                    databaseRef.updateChildren(map).addOnSuccessListener {
-                        hideProgressbar()
-                        val intent = Intent(this@LoginActivity, CountActivity::class.java)
-                        intent.putExtra("data", model)
-                        intent.putExtra("hasWin", win)
-                        intent.flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        startActivity(intent)
-                    }.addOnFailureListener {
-                        hideProgressbar()
-                        Toast.makeText(
-                            this, "Something went wrong...", Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    val i = Intent(applicationContext, NotificationsService::class.java)
+                    i.putExtra("data", model)
+                    startService(i)
+                    val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+                    intent.flags =
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
                 } else {
-                    hideProgressbar()
+                    var win = false
+                    if (model != null) {
+                        hideProgressbar()
+                        if (model.currentCount + 1 >= 10) {
+                            model.currentCount = 0
+                            win = true
+                        } else {
+                            model.currentCount += 1
+                        }
+                        model.totalCount += 1
+
+                        val orders = OrderHistory(
+                            System.currentTimeMillis(),
+                            model.name.toString(),
+                            user.uid,
+                            model.currentCount
+                        )
+                        val map = HashMap<String, Any>()
+                        map["/users/${user.uid}"] = model
+                        map["/orders/${System.currentTimeMillis()}"] = orders
+
+                        databaseRef.updateChildren(map).addOnSuccessListener {
+                            hideProgressbar()
+                            val intent = Intent(this@LoginActivity, CountActivity::class.java)
+                            intent.putExtra("data", model)
+                            intent.putExtra("hasWin", win)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            startActivity(intent)
+                        }.addOnFailureListener {
+                            hideProgressbar()
+                            Toast.makeText(
+                                this, "Something went wrong...", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } else {
+                        hideProgressbar()
+                    }
                 }
+            } else {
+                val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+                val model = User(
+                    userId = user.uid,
+                    email = user.email.toString(),
+                    phone = user.phoneNumber,
+                    totalCount = 1,
+                    currentCount = 1
+                )
+                intent.putExtra("user", model)
+                startActivity(intent)
             }
         }.addOnFailureListener {
             hideProgressbar()
             Toast.makeText(this, "Something went wrong...", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun loginPhone() {
+        if (PhoneNumberUtils.isGlobalPhoneNumber("+1${binding.etPhone.text}")) {
+            val options =
+                PhoneAuthOptions.newBuilder(auth).setPhoneNumber("+1${binding.etPhone.text}")
+                    .setTimeout(60L, TimeUnit.SECONDS).setActivity(this).setCallbacks(callbacks)
+                    .build()
+            PhoneAuthProvider.verifyPhoneNumber(options)
+        }
+    }
+
+    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
+        auth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                val user = task.result?.user
+                addToCount(user!!)
+            } else {
+                hideProgressbar()
+                // If sign in fails, display a message to the user.
+                Log.w(TAG, "signInWithEmail:failure", task.exception)
+                Toast.makeText(
+                    baseContext, "Authentication failed.", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+
+    private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+            // This callback will be invoked in two situations:
+            // 1 - Instant verification. In some cases the phone number can be instantly
+            //     verified without needing to send or enter a verification code.
+            // 2 - Auto-retrieval. On some devices Google Play services can automatically
+            //     detect the incoming verification SMS and perform verification without
+            //     user action.
+            Log.d(TAG, "onVerificationCompleted:$credential")
+            signInWithPhoneAuthCredential(credential)
+        }
+
+        override fun onVerificationFailed(e: FirebaseException) {
+            // This callback is invoked in an invalid request for verification is made,
+            // for instance if the the phone number format is not valid.
+            Log.w(TAG, "onVerificationFailed", e)
+            hideProgressbar()
+
+            when (e) {
+                is FirebaseAuthInvalidCredentialsException -> {
+                    // Invalid request
+                }
+
+                is FirebaseTooManyRequestsException -> {
+                    // The SMS quota for the project has been exceeded
+                }
+
+                is FirebaseAuthMissingActivityForRecaptchaException -> {
+                    // reCAPTCHA verification attempted with null Activity
+
+                }
+            }
+            Toast.makeText(this@LoginActivity, e.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onCodeSent(
+            verificationId: String, token: PhoneAuthProvider.ForceResendingToken
+        ) {
+            // The SMS verification code has been sent to the provided phone number, we
+            // now need to ask the user to enter the code and then construct a credential
+            // by combining the code with a verification ID.
+            Log.d(TAG, "onCodeSent:$verificationId")
+
+            // Save verification ID and resending token so we can use them later
+            storedVerificationId = verificationId
+            resendToken = token
+            binding.etOtp.isVisible = true
+            binding.etPhone.isEnabled = false
+            hideProgressbar()
         }
     }
 

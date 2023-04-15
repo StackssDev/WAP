@@ -5,14 +5,20 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.firebasevapecounter.databinding.ActivityRegisterBinding
+import com.firebasevapecounter.model.OrderHistory
 import com.firebasevapecounter.model.User
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.ktx.Firebase
 
 class RegisterActivity : BaseActivity() {
+    private var user: User? = null
     private lateinit var binding: ActivityRegisterBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        user = intent.serializable("user")
 
         binding.btnRegister.setOnClickListener {
             validateUser()
@@ -29,19 +35,21 @@ class RegisterActivity : BaseActivity() {
             binding.etEmail.error = "Please enter your email"
             return
         }
-        if (binding.etPassword.text.isNullOrBlank()) {
+        /*if (binding.etPassword.text.isNullOrBlank()) {
             binding.etPassword.error = "Please enter a password"
             return
         }
         if (!binding.etConfirmPassword.text.toString().equals(binding.etPassword.text.toString())) {
             binding.etConfirmPassword.error = "Both password doesn't match"
             return
-        }
+        }*/
         showProgressbar()
-        createUser()
+//        createUser()
+        addUser()
+
     }
 
-    fun createUser() {
+/*    fun createUser() {
         auth.createUserWithEmailAndPassword(
             binding.etEmail.text.toString().trim(), binding.etPassword.text.toString()
         ).addOnCompleteListener(this) { task ->
@@ -61,12 +69,53 @@ class RegisterActivity : BaseActivity() {
     }
 
     fun addUser(name: String, user: FirebaseUser) {
-        val model = User(user.uid, name, user.email.toString(), 0, 0)
+        val model = User(user.uid, name, user.email.toString(), user.phoneNumber, 0, 0)
         databaseRef.child("users").child(user.uid).setValue(model).addOnSuccessListener {
             hideProgressbar()
             val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
+        }.addOnFailureListener {
+            hideProgressbar()
+            Toast.makeText(
+                this, "Something went wrong...", Toast.LENGTH_SHORT
+            ).show()
+        }
+    }*/
+
+    fun addUser() {
+        user?.name = binding.etName.text.toString()
+        user?.email = binding.etEmail.text.toString()
+        user?.totalCount = 0
+        user?.currentCount = 0
+        databaseRef.child("users").child(user?.userId!!).setValue(user).addOnSuccessListener {
+            hideProgressbar()
+            var win = false
+            hideProgressbar()
+
+            val orders = OrderHistory(
+                System.currentTimeMillis(), user?.name.toString(), user?.userId.toString(), 0
+            )
+            val map = HashMap<String, Any>()
+            map["/users/${user?.userId}"] = user!!
+            map["/orders/${System.currentTimeMillis()}"] = orders
+
+            databaseRef.updateChildren(map).addOnSuccessListener {
+                hideProgressbar()
+                val intent = Intent(this@RegisterActivity, CountActivity::class.java)
+                intent.putExtra("data", user)
+                intent.putExtra("hasWin", win)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+            }.addOnFailureListener {
+                hideProgressbar()
+                Toast.makeText(
+                    this, "Something went wrong...", Toast.LENGTH_SHORT
+                ).show()
+            }
+//            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+//            startActivity(intent)
         }.addOnFailureListener {
             hideProgressbar()
             Toast.makeText(

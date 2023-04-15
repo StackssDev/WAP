@@ -10,7 +10,10 @@ import com.firebasevapecounter.model.OrderHistory
 import java.text.SimpleDateFormat
 import java.util.*
 
-class OrdersAdapter(options: FirebaseRecyclerOptions<OrderHistory>) :
+class OrdersAdapter(
+    options: FirebaseRecyclerOptions<OrderHistory>,
+    private val listener: (OrderHistory, Boolean) -> Unit
+) :
     FirebaseRecyclerAdapter<OrderHistory, OrdersAdapter.ViewHolder>(options) {
     class ViewHolder(val binding: ItemOrdersBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -23,11 +26,17 @@ class OrdersAdapter(options: FirebaseRecyclerOptions<OrderHistory>) :
         holder: ViewHolder, position: Int, model: OrderHistory
     ) {
         holder.binding.tvName.text = model.name
-        holder.binding.tvCount.text = model.currentCount.toString()
+//        holder.binding.tvCount.text = model.currentCount.toString()
 
         val cal = Calendar.getInstance()
         cal.timeInMillis = model.created
         val sdf = SimpleDateFormat("dd/MM/yy hh:mm a")
         holder.binding.tvDate.text = sdf.format(model.created)
+        holder.binding.ivAccept.setOnClickListener {
+            listener(model, true)
+        }
+        holder.binding.ivReject.setOnClickListener {
+            listener(model, false)
+        }
     }
 }

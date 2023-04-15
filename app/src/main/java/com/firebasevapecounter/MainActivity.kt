@@ -31,9 +31,9 @@ class MainActivity : BaseActivity() {
 
         askNotificationPermission()
 
-        binding.btnSignup.setOnClickListener {
+        /*binding.btnSignup.setOnClickListener {
             startActivity(Intent(this@MainActivity, RegisterActivity::class.java))
-        }
+        }*/
 
         binding.btnLogin.setOnClickListener {
             startActivity(Intent(this@MainActivity, LoginActivity::class.java))
