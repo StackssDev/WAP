@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "533704196595",
+    "project_id": "vapecounter",
+    "storage_bucket": "vapecounter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533704196595:android:196b2e1098e9dd1e365286",
+        "android_client_info": {
+          "package_name": "com.firebasevapecounter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533704196595-2foglrfarlup7nsc5ovve1lpgkl4flll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firebasevapecounter",
+            "certificate_hash": "d1ee28e6c16c48a6ec7d27129677054015ba5de5"
+          }
+        },
+        {
+          "client_id": "533704196595-m56hsqf9hghdaf37a81clb39j9j76f3s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBphupFnL6-nW2AHuUlfbqdtIpRT569dno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533704196595-m56hsqf9hghdaf37a81clb39j9j76f3s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
