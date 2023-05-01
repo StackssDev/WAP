@@ -23,5 +23,14 @@ class DashboardActivity : BaseActivity() {
             startActivity(Intent(this, OrdersActivity::class.java))
         }
 
+        binding.btnLogout.setOnClickListener {
+
+            finish()
+        }
+
+    }
+
+    override fun onBackPressed() {
+
     }
 }

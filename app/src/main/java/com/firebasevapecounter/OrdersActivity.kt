@@ -39,7 +39,7 @@ class OrdersActivity : BaseActivity() {
         if (accepted) {
             val map = HashMap<String, Any>()
             data.status = Status.ACCEPTED
-            map["/orders/${System.currentTimeMillis()}"] = data
+            map["/orders/${data.created}"] = data
 
             databaseRef.updateChildren(map).addOnSuccessListener {
                 hideProgressbar()
@@ -64,7 +64,7 @@ class OrdersActivity : BaseActivity() {
                     model?.currentCount = (model?.currentCount ?: 0) - 1
                 }
                 map["/users/${model?.userId}"] = model
-                data.status = Status.ACCEPTED
+                data.status = Status.REJECTED
                 map["/orders/${data.created}"] = data
 
                 databaseRef.updateChildren(map).addOnSuccessListener {

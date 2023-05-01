@@ -86,8 +86,8 @@ class RegisterActivity : BaseActivity() {
     fun addUser() {
         user?.name = binding.etName.text.toString()
         user?.email = binding.etEmail.text.toString()
-        user?.totalCount = 0
-        user?.currentCount = 0
+        user?.totalCount = 1
+        user?.currentCount = 1
         databaseRef.child("users").child(user?.userId!!).setValue(user).addOnSuccessListener {
             hideProgressbar()
             var win = false

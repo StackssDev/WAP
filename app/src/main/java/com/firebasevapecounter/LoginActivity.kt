@@ -35,10 +35,10 @@ class LoginActivity : BaseActivity() {
         binding.etPhone.isEnabled = true
         binding.btnLogin.setOnClickListener {
             if (binding.etPhone.text.isNullOrBlank()) return@setOnClickListener
-
             showProgressbar()
             if (storedVerificationId.isNullOrBlank()) {
-                loginPhone()
+//                loginPhone()
+                addToCount()
             } else {
                 val credential = PhoneAuthProvider.getCredential(
                     storedVerificationId, binding.etOtp.text.toString()
@@ -70,80 +70,85 @@ class LoginActivity : BaseActivity() {
         }
     }*/
 
-
-    private fun addToCount(user: FirebaseUser) {
-        databaseRef.child("users").child(user.uid).get().addOnSuccessListener {
-            if (it.value != null) {
-                var model = it.getValue(User::class.java)
-                if (model?.admin == true) {
-                    hideProgressbar()
-                    val i = Intent(applicationContext, NotificationsService::class.java)
-                    i.putExtra("data", model)
-                    startService(i)
-                    val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                    intent.flags =
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    startActivity(intent)
-                } else {
-                    var win = false
-                    if (model != null) {
+    private fun addToCount() {
+        databaseRef.child("users").orderByChild("phone").equalTo("+1${binding.etPhone.text}").get()
+            .addOnSuccessListener {
+                if (it.value != null) {
+                    var model = it.children.first().getValue(User::class.java)
+                    if (model?.admin == true) {
                         hideProgressbar()
-                        if (model.currentCount + 1 >= 10) {
-                            model.currentCount = 0
-                            win = true
-                        } else {
-                            model.currentCount += 1
-                        }
-                        model.totalCount += 1
-
-                        val orders = OrderHistory(
-                            System.currentTimeMillis(),
-                            model.name.toString(),
-                            user.uid,
-                            model.currentCount
-                        )
-                        val map = HashMap<String, Any>()
-                        map["/users/${user.uid}"] = model
-                        map["/orders/${System.currentTimeMillis()}"] = orders
-
-                        databaseRef.updateChildren(map).addOnSuccessListener {
-                            hideProgressbar()
-                            val intent = Intent(this@LoginActivity, CountActivity::class.java)
-                            intent.putExtra("data", model)
-                            intent.putExtra("hasWin", win)
-                            intent.flags =
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            startActivity(intent)
-                        }.addOnFailureListener {
-                            hideProgressbar()
-                            Toast.makeText(
-                                this, "Something went wrong...", Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        val i = Intent(applicationContext, NotificationsService::class.java)
+                        i.putExtra("data", model)
+                        startService(i)
+                        val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(intent)
                     } else {
-                        hideProgressbar()
+                        var win = false
+                        if (model != null) {
+                            hideProgressbar()
+                            if (model.currentCount + 1 >= 10) {
+                                model.currentCount = 0
+                                win = true
+                            } else {
+                                model.currentCount += 1
+                            }
+                            model.totalCount += 1
+
+                            val orders = OrderHistory(
+                                System.currentTimeMillis(),
+                                model.name.toString(),
+                                model.userId.toString(),
+                                model.currentCount
+                            )
+                            val map = HashMap<String, Any>()
+                            map["/users/${model.userId}"] = model
+                            map["/orders/${orders.created}"] = orders
+
+                            databaseRef.updateChildren(map).addOnSuccessListener {
+                                hideProgressbar()
+                                val intent = Intent(this@LoginActivity, CountActivity::class.java)
+                                intent.putExtra("data", model)
+                                intent.putExtra("hasWin", win)
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                startActivity(intent)
+                            }.addOnFailureListener {
+                                hideProgressbar()
+                                Toast.makeText(
+                                    this, "Something went wrong...", Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            hideProgressbar()
+                        }
                     }
+                } else {
+                    loginPhone()
                 }
-            } else {
-                val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-                val model = User(
-                    userId = user.uid,
-                    email = user.email.toString(),
-                    phone = user.phoneNumber,
-                    totalCount = 1,
-                    currentCount = 1
-                )
-                intent.putExtra("user", model)
-                startActivity(intent)
+            }.addOnFailureListener {
+                hideProgressbar()
+                Toast.makeText(this, "Something went wrong...", Toast.LENGTH_SHORT).show()
             }
-        }.addOnFailureListener {
-            hideProgressbar()
-            Toast.makeText(this, "Something went wrong...", Toast.LENGTH_SHORT).show()
-        }
+    }
+
+    fun addNewUserCount(user: FirebaseUser) {
+        val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+        val model = User(
+            userId = user.uid,
+            email = user.email.toString(),
+            phone = user.phoneNumber,
+            totalCount = 1,
+            currentCount = 1
+        )
+        intent.putExtra("user", model)
+        startActivity(intent)
     }
 
     fun loginPhone() {
         if (PhoneNumberUtils.isGlobalPhoneNumber("+1${binding.etPhone.text}")) {
+
             val options =
                 PhoneAuthOptions.newBuilder(auth).setPhoneNumber("+1${binding.etPhone.text}")
                     .setTimeout(60L, TimeUnit.SECONDS).setActivity(this).setCallbacks(callbacks)
@@ -156,7 +161,7 @@ class LoginActivity : BaseActivity() {
         auth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 val user = task.result?.user
-                addToCount(user!!)
+                addNewUserCount(user!!)
             } else {
                 hideProgressbar()
                 // If sign in fails, display a message to the user.

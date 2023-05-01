@@ -5,8 +5,8 @@ data class User(
     var name: String? = "",
     var email: String? = "",
     var phone: String? = "",
-    var totalCount: Int = 0,
-    var currentCount: Int = 0,
+    var totalCount: Int = 1,
+    var currentCount: Int = 1,
     var admin: Boolean = false,
     var token: String ?= ""
 ) : java.io.Serializable

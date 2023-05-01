@@ -27,6 +27,10 @@ class CountActivity : BaseActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
+    }
+
+    override fun onBackPressed() {
 
     }
+
 }
