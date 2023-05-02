@@ -35,6 +35,10 @@ class RegisterActivity : BaseActivity() {
             binding.etEmail.error = "Please enter your email"
             return
         }
+        if (!binding.etEmail.text.isValidEmail()) {
+            binding.etEmail.error = "Please enter valid email"
+            return
+        }
         /*if (binding.etPassword.text.isNullOrBlank()) {
             binding.etPassword.error = "Please enter a password"
             return
@@ -73,7 +77,7 @@ class RegisterActivity : BaseActivity() {
         databaseRef.child("users").child(user.uid).setValue(model).addOnSuccessListener {
             hideProgressbar()
             val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }.addOnFailureListener {
             hideProgressbar()
@@ -94,19 +98,20 @@ class RegisterActivity : BaseActivity() {
             hideProgressbar()
 
             val orders = OrderHistory(
-                System.currentTimeMillis(), user?.name.toString(), user?.userId.toString(), 0
+                System.currentTimeMillis(), user?.name.toString(), user?.userId.toString(), 1
             )
             val map = HashMap<String, Any>()
             map["/users/${user?.userId}"] = user!!
-            map["/orders/${System.currentTimeMillis()}"] = orders
+            map["/orders/${orders.created}"] = orders
 
             databaseRef.updateChildren(map).addOnSuccessListener {
                 hideProgressbar()
                 val intent = Intent(this@RegisterActivity, CountActivity::class.java)
                 intent.putExtra("data", user)
                 intent.putExtra("hasWin", win)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_NEW_TASK  and Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(intent)
+                finish()
             }.addOnFailureListener {
                 hideProgressbar()
                 Toast.makeText(
@@ -114,7 +119,7 @@ class RegisterActivity : BaseActivity() {
                 ).show()
             }
 //            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+//            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_NEW_TASK
 //            startActivity(intent)
         }.addOnFailureListener {
             hideProgressbar()

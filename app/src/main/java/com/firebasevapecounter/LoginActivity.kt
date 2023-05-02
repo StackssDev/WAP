@@ -82,8 +82,9 @@ class LoginActivity : BaseActivity() {
                         startService(i)
                         val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
                         intent.flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
                         startActivity(intent)
+                        finish()
                     } else {
                         var win = false
                         if (model != null) {
@@ -112,8 +113,9 @@ class LoginActivity : BaseActivity() {
                                 intent.putExtra("data", model)
                                 intent.putExtra("hasWin", win)
                                 intent.flags =
-                                    Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
                                 startActivity(intent)
+                                finish()
                             }.addOnFailureListener {
                                 hideProgressbar()
                                 Toast.makeText(
@@ -134,6 +136,7 @@ class LoginActivity : BaseActivity() {
     }
 
     fun addNewUserCount(user: FirebaseUser) {
+        hideProgressbar()
         val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
         val model = User(
             userId = user.uid,
@@ -144,11 +147,11 @@ class LoginActivity : BaseActivity() {
         )
         intent.putExtra("user", model)
         startActivity(intent)
+        finish()
     }
 
     fun loginPhone() {
         if (PhoneNumberUtils.isGlobalPhoneNumber("+1${binding.etPhone.text}")) {
-
             val options =
                 PhoneAuthOptions.newBuilder(auth).setPhoneNumber("+1${binding.etPhone.text}")
                     .setTimeout(60L, TimeUnit.SECONDS).setActivity(this).setCallbacks(callbacks)
@@ -195,9 +198,9 @@ class LoginActivity : BaseActivity() {
 
             when (e) {
                 is FirebaseAuthInvalidCredentialsException -> {
-                    // Invalid request
+                    Toast.makeText(this@LoginActivity, "Invalid Phone Number. Pls try again...", Toast.LENGTH_SHORT).show()
                 }
-
+/*
                 is FirebaseTooManyRequestsException -> {
                     // The SMS quota for the project has been exceeded
                 }
@@ -205,9 +208,11 @@ class LoginActivity : BaseActivity() {
                 is FirebaseAuthMissingActivityForRecaptchaException -> {
                     // reCAPTCHA verification attempted with null Activity
 
+                }*/
+                else->{
+                    Toast.makeText(this@LoginActivity, e.localizedMessage, Toast.LENGTH_SHORT).show()
                 }
             }
-            Toast.makeText(this@LoginActivity, e.localizedMessage, Toast.LENGTH_SHORT).show()
         }
 
         override fun onCodeSent(

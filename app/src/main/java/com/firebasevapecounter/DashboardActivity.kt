@@ -24,7 +24,10 @@ class DashboardActivity : BaseActivity() {
         }
 
         binding.btnLogout.setOnClickListener {
-
+            val intent = Intent(this@DashboardActivity, LoginActivity::class.java)
+            intent.flags =
+                Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
             finish()
         }
 
