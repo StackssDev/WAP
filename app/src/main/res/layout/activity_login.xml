@@ -1,69 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:keyboard="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
+    android:background="@color/black"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="40dp"
     tools:context=".LoginActivity">
 
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:alpha="0.4"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_smoke" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        android:padding="40dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
-            android:text="+1"
-            android:textSize="20sp" />
+            android:background="@drawable/btn_border"
+            android:padding="16dp"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/etPhone"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:text="+1"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/etPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:hint="Enter Phone Number"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:textSize="16sp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <EditText
+                android:id="@+id/etOtp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter OTP"
+                android:inputType="number"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:background="@null"
+                android:maxLength="6"
+                android:visibility="gone"
+                android:singleLine="true"
+                android:textSize="20sp"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.davidmiguel.numberkeyboard.NumberKeyboard
+            android:id="@+id/numPad"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
-            android:hint="Enter Phone Number"
-            android:inputType="number"
-            android:maxLength="10"
-            android:singleLine="true"
-            android:textSize="20sp" />
+            android:padding="20dp"
+            app:numberkeyboard_keyPadding="18dp"
+            app:numberkeyboard_numberKeyBackground="@color/bg_transparent"
+            app:numberkeyboard_numberKeyTextColor="@color/white"
+            app:numberkeyboard_rightAuxBtnIcon="@drawable/ic_back"
+            keyboard:numberkeyboard_keyboardType="custom" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/btn_border"
+            android:paddingVertical="20dp"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:cornerRadius="15dp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <EditText
-        android:id="@+id/etOtp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="Enter OTP"
-        android:inputType="number"
-        android:maxLength="6"
-        android:singleLine="true"
-        android:textSize="20sp"
-        android:visibility="gone" />
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:paddingVertical="20dp"
-        android:text="Login"
-        android:textSize="20sp"
-        app:cornerRadius="15dp" />
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,8 @@ package com.firebasevapecounter
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import com.firebasevapecounter.databinding.ActivityCountBinding
 import com.firebasevapecounter.model.User
 
@@ -16,18 +18,27 @@ class CountActivity : BaseActivity() {
         val hasWin = intent.getBooleanExtra("hasWin", false)
         val data = intent.serializable<User>("data")
 
-        if(hasWin){
+        if (hasWin) {
             binding.tvCount.text = "You win a free VAPE!!"
-        }else{
+        } else {
             binding.tvCount.text = "${data?.currentCount} / 10"
         }
 
+        Handler(Looper.getMainLooper()).postDelayed({
+            logout()
+        }, 30000)
+
         binding.btnLogout.setOnClickListener {
-            val intent = Intent(this@CountActivity,LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
-            finish()
+            logout()
         }
+    }
+
+    private fun logout() {
+        val intent = Intent(this@CountActivity, LoginActivity::class.java)
+        intent.flags =
+            Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+        finish()
     }
 
     override fun onBackPressed() {

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.FirebaseVapeCounter" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="Theme.FirebaseVapeCounter" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -10,10 +10,10 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/black</item>
         <!-- Customize your theme here. -->
+        <item name="android:fontFamily">@font/bruno_ace_regular</item>
     </style>
-
 
     <style name="ProgressDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:backgroundDimEnabled">true</item>

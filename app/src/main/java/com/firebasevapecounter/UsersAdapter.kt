@@ -25,6 +25,6 @@ class UsersAdapter(options: FirebaseRecyclerOptions<User>) :
         holder: ViewHolder, position: Int, model: User
     ) {
         holder.binding.tvName.text = model.name
-        holder.binding.tvCount.text = model.currentCount.toString()
+        holder.binding.tvCount.text = "${model.currentCount} | ${model.totalCount}"
     }
 }

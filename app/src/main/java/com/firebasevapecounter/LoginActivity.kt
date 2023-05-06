@@ -6,6 +6,7 @@ import android.telephony.PhoneNumberUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
+import com.davidmiguel.numberkeyboard.NumberKeyboardListener
 import com.firebasevapecounter.databinding.ActivityLoginBinding
 import com.firebasevapecounter.model.OrderHistory
 import com.firebasevapecounter.model.User
@@ -20,7 +21,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import java.util.concurrent.TimeUnit
 
-class LoginActivity : BaseActivity() {
+class LoginActivity : BaseActivity(), NumberKeyboardListener {
 
     private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
     private var storedVerificationId: String = ""
@@ -32,7 +33,8 @@ class LoginActivity : BaseActivity() {
         setContentView(binding.root)
 
         binding.etOtp.isVisible = false
-        binding.etPhone.isEnabled = true
+        binding.etPhone.isVisible = true
+        binding.numPad.setListener(this)
         binding.btnLogin.setOnClickListener {
             if (binding.etPhone.text.isNullOrBlank()) return@setOnClickListener
             showProgressbar()
@@ -227,12 +229,29 @@ class LoginActivity : BaseActivity() {
             storedVerificationId = verificationId
             resendToken = token
             binding.etOtp.isVisible = true
-            binding.etPhone.isEnabled = false
+            binding.etPhone.isVisible = false
             hideProgressbar()
         }
     }
 
     companion object {
         private val TAG = LoginActivity::class.java.name
+    }
+
+    override fun onLeftAuxButtonClicked() {
+
+    }
+
+    override fun onNumberClicked(number: Int) {
+        var num = binding.etPhone.text.toString()
+        num+=number.toString()
+        binding.etPhone.setText(num)
+    }
+
+    override fun onRightAuxButtonClicked() {
+        var num = binding.etPhone.text.toString()
+        if(num.isNullOrBlank()) return
+        num = num.removeRange(num.lastIndex,num.lastIndex+1)
+        binding.etPhone.setText(num)
     }
 }
