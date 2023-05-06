@@ -12,7 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/black</item>
         <!-- Customize your theme here. -->
-        <item name="android:fontFamily">@font/bruno_ace_regular</item>
+        <item name="android:fontFamily">@font/gabriela_regular</item>
     </style>
 
     <style name="ProgressDialog" parent="Theme.AppCompat.Light.Dialog.Alert">

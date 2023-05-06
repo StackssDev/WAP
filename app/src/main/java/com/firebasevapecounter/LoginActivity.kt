@@ -200,19 +200,23 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
 
             when (e) {
                 is FirebaseAuthInvalidCredentialsException -> {
-                    Toast.makeText(this@LoginActivity, "Invalid Phone Number. Pls try again...", Toast.LENGTH_SHORT).show()
-                }
-/*
-                is FirebaseTooManyRequestsException -> {
-                    // The SMS quota for the project has been exceeded
-                }
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Invalid Phone Number. Pls try again...",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }/*
+                                is FirebaseTooManyRequestsException -> {
+                                    // The SMS quota for the project has been exceeded
+                                }
 
-                is FirebaseAuthMissingActivityForRecaptchaException -> {
-                    // reCAPTCHA verification attempted with null Activity
+                                is FirebaseAuthMissingActivityForRecaptchaException -> {
+                                    // reCAPTCHA verification attempted with null Activity
 
-                }*/
-                else->{
-                    Toast.makeText(this@LoginActivity, e.localizedMessage, Toast.LENGTH_SHORT).show()
+                                }*/
+                else -> {
+                    Toast.makeText(this@LoginActivity, e.localizedMessage, Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -229,7 +233,7 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
             storedVerificationId = verificationId
             resendToken = token
             binding.etOtp.isVisible = true
-            binding.etPhone.isVisible = false
+            binding.llPhone.isVisible = false
             hideProgressbar()
         }
     }
@@ -243,15 +247,30 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
     }
 
     override fun onNumberClicked(number: Int) {
-        var num = binding.etPhone.text.toString()
-        num+=number.toString()
-        binding.etPhone.setText(num)
+        if (binding.llPhone.isVisible) {
+            var num = binding.etPhone.text.toString()
+            num += number.toString()
+            binding.etPhone.setText(num)
+        }
+        if (binding.etOtp.isVisible) {
+            var num = binding.etOtp.text.toString()
+            num += number.toString()
+            binding.etOtp.setText(num)
+        }
     }
 
     override fun onRightAuxButtonClicked() {
-        var num = binding.etPhone.text.toString()
-        if(num.isNullOrBlank()) return
-        num = num.removeRange(num.lastIndex,num.lastIndex+1)
-        binding.etPhone.setText(num)
+        if (binding.llPhone.isVisible) {
+            var num = binding.etPhone.text.toString()
+            if (num.isNullOrBlank()) return
+            num = num.removeRange(num.lastIndex, num.lastIndex + 1)
+            binding.etPhone.setText(num)
+        }
+        if (binding.etOtp.isVisible) {
+            var num = binding.etOtp.text.toString()
+            if (num.isNullOrBlank()) return
+            num = num.removeRange(num.lastIndex, num.lastIndex + 1)
+            binding.etOtp.setText(num)
+        }
     }
 }

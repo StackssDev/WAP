@@ -7,7 +7,7 @@
     app:cardCornerRadius="16dp"
     app:strokeColor="@color/white"
     app:strokeWidth="1dp"
-    android:backgroundTint="@color/bg_transparent"
+    android:backgroundTint="@color/bg_semi_transparent"
     android:layout_marginHorizontal="10dp"
     android:orientation="vertical">
 
