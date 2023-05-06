@@ -58,10 +58,13 @@ class OrdersActivity : BaseActivity() {
                 val map = HashMap<String, Any?>()
                 if (model?.currentCount == 0 && model.totalCount > 0) {
                     model.currentCount = 9
+                    model.totalCount = model.totalCount - 1
                 } else if (model?.currentCount == 0 && model.totalCount == 0) {
                     model.currentCount = 0
+                    model.totalCount = 0
                 } else {
                     model?.currentCount = (model?.currentCount ?: 0) - 1
+                    model?.totalCount = (model?.totalCount ?: 0) - 1
                 }
                 map["/users/${model?.userId}"] = model
                 data.status = Status.REJECTED
