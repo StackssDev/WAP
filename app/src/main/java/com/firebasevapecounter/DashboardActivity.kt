@@ -1,10 +1,10 @@
-package com.firebasevapecounter
+package com.britanonestop
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.firebasevapecounter.databinding.ActivityDashboardBinding
-import com.firebasevapecounter.model.OrderHistory
+import com.britanonestop.databinding.ActivityDashboardBinding
+import com.britanonestop.model.OrderHistory
 
 class DashboardActivity : BaseActivity() {
 

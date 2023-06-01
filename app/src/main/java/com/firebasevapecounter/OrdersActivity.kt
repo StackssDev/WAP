@@ -1,13 +1,13 @@
-package com.firebasevapecounter
+package com.britanonestop
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.firebasevapecounter.databinding.ActivityOrdersBinding
-import com.firebasevapecounter.model.OrderHistory
-import com.firebasevapecounter.model.Status
-import com.firebasevapecounter.model.User
+import com.britanonestop.databinding.ActivityOrdersBinding
+import com.britanonestop.model.OrderHistory
+import com.britanonestop.model.Status
+import com.britanonestop.model.User
 
 class OrdersActivity : BaseActivity() {
 

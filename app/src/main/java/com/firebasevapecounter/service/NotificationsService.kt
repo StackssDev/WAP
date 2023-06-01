@@ -1,4 +1,4 @@
-package com.firebasevapecounter.service
+package com.britanonestop.service
 
 import android.R
 import android.app.*
@@ -8,10 +8,10 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.firebasevapecounter.MainActivity
-import com.firebasevapecounter.OrdersActivity
-import com.firebasevapecounter.model.OrderHistory
-import com.firebasevapecounter.model.User
+import com.britanonestop.MainActivity
+import com.britanonestop.OrdersActivity
+import com.britanonestop.model.OrderHistory
+import com.britanonestop.model.User
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -62,7 +62,7 @@ class NotificationsService : Service(), ChildEventListener {
         bigText.setSummaryText("Counter")
 
         mBuilder.setContentIntent(pendingIntent)
-        mBuilder.setSmallIcon(com.firebasevapecounter.R.mipmap.ic_launcher_round)
+        mBuilder.setSmallIcon(com.britanonestop.R.mipmap.ic_launcher_round)
         mBuilder.setContentTitle(msg)
         mBuilder.setContentText(data?.currentCount.toString())
         mBuilder.priority = Notification.PRIORITY_MAX

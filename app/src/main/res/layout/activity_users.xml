@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.4"
-        android:src="@drawable/img_smoke"
+        android:src="@drawable/bg_vape_wood"
         android:scaleType="centerCrop"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -19,6 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:itemCount="4"
+        android:paddingHorizontal="50dp"
+        android:paddingVertical="70dp"
         tools:listitem="@layout/item_user"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

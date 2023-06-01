@@ -44,7 +44,7 @@
 
         </activity>
 
-        <service android:name="com.firebasevapecounter.service.NotificationsService" />
+        <service android:name="com.britanonestop.service.NotificationsService" />
     </application>
 
 </manifest>

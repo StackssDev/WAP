@@ -22,6 +22,6 @@
 
 -keepattributes Signature
 
--keepclassmembers class com.firebasevapecounter.model.** {
+-keepclassmembers class com.britanonestop.model.** {
       *;
     }

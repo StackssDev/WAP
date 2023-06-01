@@ -1,4 +1,4 @@
-package com.firebasevapecounter.model
+package com.britanonestop.model
 
 data class User(
     var userId: String? = "",

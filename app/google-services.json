@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "533704196595",
-    "project_id": "vapecounter",
-    "storage_bucket": "vapecounter.appspot.com"
+    "project_number": "232062719149",
+    "project_id": "britain-one-stop",
+    "storage_bucket": "britain-one-stop.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:533704196595:android:196b2e1098e9dd1e365286",
+        "mobilesdk_app_id": "1:232062719149:android:ddb8bc6771f79d3bba6224",
         "android_client_info": {
-          "package_name": "com.firebasevapecounter"
+          "package_name": "com.britanonestop"
         }
       },
       "oauth_client": [
         {
-          "client_id": "533704196595-2foglrfarlup7nsc5ovve1lpgkl4flll.apps.googleusercontent.com",
+          "client_id": "232062719149-k81tlj5fgidnbqv7kalhat0b8no0h8v6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.firebasevapecounter",
+            "package_name": "com.britanonestop",
             "certificate_hash": "d1ee28e6c16c48a6ec7d27129677054015ba5de5"
           }
         },
         {
-          "client_id": "533704196595-m56hsqf9hghdaf37a81clb39j9j76f3s.apps.googleusercontent.com",
+          "client_id": "232062719149-h2bvainj7ltps8nbikmhhq1meds5gheb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBphupFnL6-nW2AHuUlfbqdtIpRT569dno"
+          "current_key": "AIzaSyDg7R3VZZpOQUebdJes0BxZLHCmHZhyHLc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "533704196595-m56hsqf9hghdaf37a81clb39j9j76f3s.apps.googleusercontent.com",
+              "client_id": "232062719149-h2bvainj7ltps8nbikmhhq1meds5gheb.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,4 +1,4 @@
-package com.firebasevapecounter.model
+package com.britanonestop.model
 
 data class OrderHistory(
     val created: Long = 0,

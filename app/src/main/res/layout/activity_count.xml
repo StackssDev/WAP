@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/img_smoke"
+        android:src="@drawable/bg_vape_wood"
         android:alpha="0.4"
         android:scaleType="centerCrop"/>
 
@@ -22,7 +22,7 @@
         android:text="10 / 10"
         android:textSize="60sp"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/fontColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
         android:textSize="20sp"
         app:cornerRadius="15dp"
         android:background="@drawable/btn_border"
-        android:textColor="@color/white"
+        android:textColor="@color/fontColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

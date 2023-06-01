@@ -1,4 +1,4 @@
-package com.firebasevapecounter
+package com.britanonestop
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,10 +7,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.davidmiguel.numberkeyboard.NumberKeyboardListener
-import com.firebasevapecounter.databinding.ActivityLoginBinding
-import com.firebasevapecounter.model.OrderHistory
-import com.firebasevapecounter.model.User
-import com.firebasevapecounter.service.NotificationsService
+import com.britanonestop.databinding.ActivityLoginBinding
+import com.britanonestop.model.OrderHistory
+import com.britanonestop.model.User
+import com.britanonestop.service.NotificationsService
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import java.util.concurrent.TimeUnit
 
 class LoginActivity : BaseActivity(), NumberKeyboardListener {
@@ -38,7 +41,23 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
         binding.btnLogin.setOnClickListener {
             if (binding.etPhone.text.isNullOrBlank()) return@setOnClickListener
             showProgressbar()
-            if (storedVerificationId.isNullOrBlank()) {
+
+            databaseRef.child("users").orderByChild("phone").equalTo("+1${binding.etPhone.text}")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (snapshot.exists()) {
+                            addToCount()
+                        } else {
+                            loginPhone()
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Toast.makeText(this@LoginActivity, "Something went wrong...", Toast.LENGTH_SHORT).show()
+                    }
+                })
+
+            /*if (storedVerificationId.isNullOrBlank()) {
 //                loginPhone()
                 addToCount()
             } else {
@@ -46,7 +65,7 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
                     storedVerificationId, binding.etOtp.text.toString()
                 )
                 signInWithPhoneAuthCredential(credential)
-            }
+            }*/
         }
 
     }
@@ -137,15 +156,12 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
             }
     }
 
-    fun addNewUserCount(user: FirebaseUser) {
+    fun addNewUserCount(phone: String) {
         hideProgressbar()
+        val userId = databaseRef.child("users").push().key
         val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
         val model = User(
-            userId = user.uid,
-            email = user.email.toString(),
-            phone = user.phoneNumber,
-            totalCount = 1,
-            currentCount = 1
+            userId = userId, email = "", phone = phone, totalCount = 1, currentCount = 1
         )
         intent.putExtra("user", model)
         startActivity(intent)
@@ -153,16 +169,16 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
     }
 
     fun loginPhone() {
-        if (PhoneNumberUtils.isGlobalPhoneNumber("+1${binding.etPhone.text}")) {
-            val options =
+        if (PhoneNumberUtils.isGlobalPhoneNumber("+1${binding.etPhone.text}")) {/*val options =
                 PhoneAuthOptions.newBuilder(auth).setPhoneNumber("+1${binding.etPhone.text}")
                     .setTimeout(60L, TimeUnit.SECONDS).setActivity(this).setCallbacks(callbacks)
                     .build()
-            PhoneAuthProvider.verifyPhoneNumber(options)
+            PhoneAuthProvider.verifyPhoneNumber(options)*/
+            addNewUserCount("+1${binding.etPhone.text}")
         }
     }
 
-    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
+    /*private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         auth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 val user = task.result?.user
@@ -176,10 +192,10 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
                 ).show()
             }
         }
-    }
+    }*/
 
 
-    private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+    /*private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
             // This callback will be invoked in two situations:
@@ -205,7 +221,7 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
                         "Invalid Phone Number. Pls try again...",
                         Toast.LENGTH_SHORT
                     ).show()
-                }/*
+                }*//*
                                 is FirebaseTooManyRequestsException -> {
                                     // The SMS quota for the project has been exceeded
                                 }
@@ -213,7 +229,7 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
                                 is FirebaseAuthMissingActivityForRecaptchaException -> {
                                     // reCAPTCHA verification attempted with null Activity
 
-                                }*/
+                                }*//*
                 else -> {
                     Toast.makeText(this@LoginActivity, e.localizedMessage, Toast.LENGTH_SHORT)
                         .show()
@@ -236,7 +252,7 @@ class LoginActivity : BaseActivity(), NumberKeyboardListener {
             binding.llPhone.isVisible = false
             hideProgressbar()
         }
-    }
+    }*/
 
     companion object {
         private val TAG = LoginActivity::class.java.name

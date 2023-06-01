@@ -1,14 +1,14 @@
-package com.firebasevapecounter
+package com.britanonestop
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.firebasevapecounter.databinding.ItemOrdersBinding
-import com.firebasevapecounter.databinding.ItemUserBinding
-import com.firebasevapecounter.model.OrderHistory
-import com.firebasevapecounter.model.User
+import com.britanonestop.databinding.ItemOrdersBinding
+import com.britanonestop.databinding.ItemUserBinding
+import com.britanonestop.model.OrderHistory
+import com.britanonestop.model.User
 import java.text.SimpleDateFormat
 import java.util.*
 

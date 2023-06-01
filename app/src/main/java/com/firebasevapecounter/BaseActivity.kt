@@ -1,4 +1,4 @@
-package com.firebasevapecounter
+package com.britanonestop
 
 import android.content.Intent
 import android.os.Build
@@ -8,8 +8,8 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
-import com.firebasevapecounter.dialogs.ProgressDialog
-import com.firebasevapecounter.model.User
+import com.britanonestop.dialogs.ProgressDialog
+import com.britanonestop.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth

@@ -1,11 +1,11 @@
-package com.firebasevapecounter
+package com.britanonestop
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.firebasevapecounter.databinding.ActivityUsersBinding
-import com.firebasevapecounter.model.OrderHistory
-import com.firebasevapecounter.model.User
+import com.britanonestop.databinding.ActivityUsersBinding
+import com.britanonestop.model.OrderHistory
+import com.britanonestop.model.User
 
 class UsersActivity : BaseActivity() {
     private lateinit var binding: ActivityUsersBinding

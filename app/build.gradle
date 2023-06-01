@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace 'com.firebasevapecounter'
+    namespace 'com.britanonestop'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.firebasevapecounter"
+        applicationId "com.britanonestop"
         minSdk 26
         targetSdk 33
         versionCode 1

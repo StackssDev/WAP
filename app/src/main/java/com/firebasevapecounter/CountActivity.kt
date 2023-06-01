@@ -1,12 +1,12 @@
-package com.firebasevapecounter
+package com.britanonestop
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import com.firebasevapecounter.databinding.ActivityCountBinding
-import com.firebasevapecounter.model.User
+import com.britanonestop.databinding.ActivityCountBinding
+import com.britanonestop.model.User
 
 class CountActivity : BaseActivity() {
     private lateinit var binding: ActivityCountBinding

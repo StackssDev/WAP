@@ -1,12 +1,12 @@
-package com.firebasevapecounter
+package com.britanonestop
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.firebasevapecounter.databinding.ActivityRegisterBinding
-import com.firebasevapecounter.model.OrderHistory
-import com.firebasevapecounter.model.User
+import com.britanonestop.databinding.ActivityRegisterBinding
+import com.britanonestop.model.OrderHistory
+import com.britanonestop.model.User
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.ktx.Firebase
 

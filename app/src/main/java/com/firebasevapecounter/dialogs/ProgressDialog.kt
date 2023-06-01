@@ -1,11 +1,11 @@
-package com.firebasevapecounter.dialogs
+package com.britanonestop.dialogs
 
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import com.firebasevapecounter.R
-import com.firebasevapecounter.databinding.DialogProgressBinding
+import com.britanonestop.R
+import com.britanonestop.databinding.DialogProgressBinding
 
 class ProgressDialog @JvmOverloads constructor(
     context: Context
